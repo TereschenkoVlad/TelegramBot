@@ -4,6 +4,7 @@ const logger = require("../utils/logger");
 const config = require("../config");
 const { ValidationError, RequestError } = require("../utils/error");
 const validationErrorHandler = require("../utils/validation-error");
+const TelegramBot = require("../bot/index");
 
 class ExpressLoader {
   constructor() {
@@ -79,10 +80,13 @@ class ExpressLoader {
     });
 
     // Start application
-    app.listen(config.host.port, async () => {
-      logger.info(`Express running, now listening on port ${config.host.port}`);
-      await db.connect();
+    app.listen(config.app.port, async () => {
+      logger.info(`Express running, now listening on port ${config.app.port}`);
     }).setTimeout(120000);
+
+    TelegramBot.launch().then(res => {
+      logger.info(`Telegram BOT has been lunched!`);
+    })
   }
 }
 
